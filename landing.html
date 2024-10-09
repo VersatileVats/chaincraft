@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tron PlayZone | Connect Page</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #landing-section {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      #landing-section img {
+        filter: grayscale(100%);
+      }
+
+      #full-form {
+        font-size: 2rem;
+        font-weight: bold;
+        border-radius: 1rem;
+        border: 2px dashed;
+        padding: 0.5rem;
+      }
+
+      #reasoning {
+        font-size: 1.2rem;
+        text-align: center;
+      }
+
+      #full-form,
+      #reasoning {
+        opacity: 0; /* Initially hidden */
+        transition: opacity 0.5s ease-in-out; /* Smooth fade-in and fade-out */
+      }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./gameStyle.css" />
+  </head>
+  <body
+    view="own"
+    style="position: relative; font-family: 'Josefin Sans', sans-serif"
+  >
+    <div class="overlay hidden"></div>
+
+    <!-- loader -->
+    <img
+      id="loader"
+      style="
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 0;
+        padding: 0px;
+        width: 200px;
+        z-index: 500;
+      "
+      src="./img/loader.svg"
+      height="100px"
+    />
+
+    <!-- tutorial image -->
+    <img
+      id="tutorialImage"
+      style="
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255);
+        border-radius: 0px;
+        z-index: 500;
+        width: 64px;
+      "
+      src="https://img.icons8.com/external-inipagistudio-mixed-inipagistudio/64/null/external-tutorial-online-crash-course-inipagistudio-mixed-inipagistudio.png"
+    />
+
+    <!-- tutorial -->
+    <div
+      id="tutorial"
+      style="
+        z-index: 100;
+        height: 100vh;
+        display: none;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+      "
+    >
+      <h2
+        id="heading"
+        style="
+          font-size: 2rem;
+          border: 3px solid;
+          border-radius: 5px;
+          margin-bottom: 5rem;
+        "
+      >
+        Heading for the slide
+      </h2>
+      <div
+        style="
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+        "
+      >
+        <div>
+          <img
+            id="leftKey"
+            onclick="leftOperation(currentTutorial)"
+            style="
+              visibility: hidden;
+              cursor: pointer;
+              background: rgb(255, 255, 255);
+              border-radius: 50%;
+            "
+            src="https://img.icons8.com/ios-glyphs/40/null/double-left--v1.png"
+          />
+        </div>
+        <div id="imageDiv">
+          <img
+            id="image"
+            style="border-radius: 10px"
+            src="./img/bgd.jpg"
+            width="450"
+            alt=""
+          />
+        </div>
+        <p
+          id="para"
+          style="
+            text-align: justify;
+            font-size: 1.3rem;
+            width: 50%;
+            border-radius: 10px;
+          "
+        >
+          I am here to tell you about the various things that can be useful and
+          I will try my best to demonstrate the same
+        </p>
+        <div>
+          <img
+            id="rightKey"
+            onclick="rightOperation(currentTutorial)"
+            style="
+              visibility: hidden;
+              cursor: pointer;
+              background: rgb(255, 255, 255);
+              border-radius: 50%;
+            "
+            src="https://img.icons8.com/ios-glyphs/40/null/double-right--v1.png"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- landing section -->
+    <div id="landing-section">
+      <div id="full-form">
+        <p>Tells the full-form of this alphabet</p>
+      </div>
+      <div id="letters">
+        <img id="letter_logo" src="img/logo.png" alt="" />
+        <img id="letter_s" src="img/p.png" alt="" />
+        <img id="letter_m" src="img/l.png" alt="" />
+        <img id="letter_a" src="img/a.png" alt="" />
+        <img id="letter_r" src="img/y.png" alt="" />
+        <p style="text-align: center; margin-top: 3rem">
+          Being smart is <u>an art</u>, and can be conquered <u>by a few</u>
+        </p>
+        <!-- Connect wallet division -->
+        <div>
+          <button
+            id="gameBtn"
+            class="btn-light"
+            style="
+              border-radius: 8px;
+              font-size: 20px;
+              margin: auto;
+              display: flex;
+            "
+          >
+            Connect Wallet
+          </button>
+          <!-- Error division that will pop up whenever thers is a connectivity issue with the wallet -->
+          <p id="walletError" style="color: red; visibility: hidden">
+            Error will pop up here
+          </p>
+        </div>
+      </div>
+
+      <div id="reasoning">
+        <p>
+          This is the text that will tell what is the reasoning for telling this
+        </p>
+      </div>
+    </div>
+
+    <!--for handling the landing section stuff-->
+    <script>
+      const reasons = [
+        " TRON logo is there",
+        " Seamless sharing of your boomarks, & files makes the extension feel well-integrated and user-friendly.",
+        "Offering users the ability to bookmark entire pages, specific sections, or images along with notes for versatility",
+        "Custom-tailored prompts can save users time, making it easier for them to work with specific models and assistance.",
+        "Allowing users to interact with the assistant via Twilio for saving and retrieving bookmarks enhances cross-platform",
+        " Indexing IBM documentation and using it as RAG (Retrieval-Augmented Generation) sources is a smart approach to ",
+      ];
+      const fullForms = [
+        "Tron Logo",
+        "Seamless sharing",
+        "Multi-Level Bookmarking",
+        "AI-Powered Assistant",
+        "RAG Source Integration",
+      ];
+
+      const fullFormDiv = document.querySelector("#full-form");
+      const reasoningDiv = document.querySelector("#reasoning");
+
+      function startAnimation() {
+        document.querySelectorAll("#letters img").forEach((letter, ind) => {
+          setTimeout(() => {
+            // Hide the text first (fade-out)
+            fullFormDiv.style.opacity = 0;
+            reasoningDiv.style.opacity = 0;
+
+            setTimeout(() => {
+              // Update the content
+              reasoningDiv.textContent = reasons[ind];
+              fullFormDiv.textContent = fullForms[ind];
+
+              // Fade the text back in (fade-in)
+              fullFormDiv.style.opacity = 1;
+              reasoningDiv.style.opacity = 1;
+
+              letter.style.filter = "grayscale(0)";
+            }, 500); // Short delay to allow fade-out before updating text
+
+            // Reset after all letters are traversed
+            if (ind === document.querySelectorAll("#letters img").length - 1) {
+              setTimeout(() => {
+                document.querySelectorAll("#letters img").forEach((letter) => {
+                  letter.style.filter = "grayscale(100%)";
+                });
+                startAnimation(); // Restart animation
+              }, 4000); // 4-second break before restarting
+            }
+          }, ind * 3000); // Delay between each letter's appearance
+        });
+      }
+
+      // Start the animation cycle
+      startAnimation();
+
+      const gsapAnimations = [
+        // 0. Smile animation
+        {
+          duration: 2, // Duration for the full motion
+          x: (i) => i * 30 - 60, // Moves letters horizontally
+          y: (i) => Math.sin(i * 0.7) * 50 - 20, // Bends letters to form a smile (curve)
+          rotate: (i) => i * 10 - 20, // Slight rotation for a curved look
+          ease: "power1.inOut", // Smooth easing effect
+          repeat: -1, // Repeat infinitely
+          yoyo: true, // Reverse the animation to create a loop
+          stagger: 0.2, // Stagger the animation so each letter moves with a small delay
+        },
+        // 1. Vertical movement and rotation
+        {
+          duration: 1.5, // Duration of the animation for each letter
+          y: (i) => (i % 2 === 0 ? -20 : 20), // Alternating vertical movement (up for even letters, down for odd)
+          rotate: (i) => (i % 2 === 0 ? 10 : -10), // Alternating rotation (clockwise for even, counterclockwise for odd)
+          ease: "power2.inOut", // Smooth easing for the motion
+          stagger: 0.2, // Stagger between letters
+          repeat: -1, // Repeat infinitely
+          yoyo: true, // Reverse the animation to make it continuous
+        },
+        // 2. Zoom In and Rotate
+        {
+          duration: 1.5,
+          scale: 1.3, // Scale up the letters
+          rotate: 360, // Rotate a full circle
+          ease: "power1.inOut", // Smooth transition for scaling and rotation
+          stagger: 0.2, // Delay between each letter
+          repeat: -1,
+          yoyo: true, // Reverse back to original size and rotation
+        },
+        // 3. Wave and Float Effect
+        {
+          duration: 2,
+          y: (i) => Math.sin(i * 1.5) * 30, // Create wave effect with vertical motion
+          rotate: (i) => i * 15 - 30, // Rotate letters slightly
+          ease: "sine.inOut", // Smooth wave motion
+          stagger: 0.25, // Delay for wave effect
+          repeat: -1,
+          yoyo: true, // Reverse motion for continuous wave
+        },
+        // 4. Flip and Slide Up
+        {
+          duration: 1.2,
+          y: -50, // Slide letters upwards
+          rotateX: 180, // Flip letters vertically
+          ease: "power2.out", // Smooth easing for the flip
+          stagger: 0.3, // Delay between letters
+          repeat: -1,
+          yoyo: true, // Reverse the flip and slide for continuous effect
+        },
+        // 5. Horizontal Slide and Bounce Effect
+        {},
+      ];
+
+      const animationInd = Math.floor(Math.random() * gsapAnimations.length);
+
+      if (animationInd == 5) {
+        gsap.fromTo(
+          "#letters img",
+          {
+            x: (i) => (i % 2 === 0 ? -100 : 100), // Slide from left for even letters, right for odd
+          },
+          {
+            duration: 1.5,
+            x: 0, // Move to the center (normal position)
+            ease: "bounce.out", // Add bounce effect
+            stagger: 0.3, // Delay between each letter
+            repeat: -1,
+            yoyo: true,
+          }
+        );
+      } else {
+        gsap.to("#letters img", gsapAnimations[animationInd]);
+      }
+    </script>
+
+    <!-- populate Tutorial -->
+    <script>
+      let imageDiv = document.querySelector("#imageDiv");
+      let heading = document.querySelector("#heading");
+      let image = document.querySelector("#image");
+      let para = document.querySelector("#para");
+
+      let currentTutorial = 0;
+
+      const leftOperation = (ind) => {
+        if (ind > 0) populateTutorial(ind - 1);
+      };
+
+      const rightOperation = (ind) => {
+        if (ind < 4) populateTutorial(ind + 1);
+      };
+
+      const populateTutorial = (ind = 0) => {
+        const headings = [
+          "Why this game?",
+          "Bitbucket Game Basics",
+          "Maze Runner Basics",
+          "Tron Video Usage",
+          "Personal Room (The End)",
+        ];
+        const images = [
+          "./img/t1.jpg",
+          "./img/t2.jpg",
+          "./img/t3.jpg",
+          "./img/t4.jpg",
+          "./img/t5.jpg",
+        ];
+        const paras = [
+          "This is a bare-javascript game that has the capabilities to beat any proficient game out in the market. Games are undoubtedly the logical sharpeners for our brains and if a game like this meets the power of Cardano then the functionalities and security standards are taken into cloud nine. With a combo of 3 functional games and lots of add-ons, the user won't be bored at any point of time and will cater knowledge throughout the process",
+          "This is a tile-matching game that has either 9 or 15 tiles according to the difficulty level. A correct answer will comprise three co-related tiles pertaining to either of the 4 topics that I have chosen: Data Structures & Algo (DSA), Operating System (OS), Cardano & DBMS. Hints will also be there.",
+          "Time will be chasing the player. Make it to the exit and beat a level, it is all about adventure and cognitive skills. A total of 6 levels are there to test you against some of the hard mazes. Time will vary from one level to another. Once lost, you have to start over again from level 1. Help the player to reach the house which is at the end of the levels",
+          "I have used Theta Video P2P SDK to integrate 9 videos related to varying domains to make sure that at the expense of playing the game, the user learns a lot and also enjoys. The top scorer of each week will automatically get some test ADAs.",
+          "Before ending the current session, it is beneficial to see the stats gathered throughout the gaming tenure, so visit this room at the end as there is no way out of this room. Visit it, see the stats and close the game",
+        ];
+
+        currentTutorial = ind;
+
+        image.style.borderRadius = "10px";
+
+        para.style.width = "50%";
+        para.style.fontSize = "1.3rem";
+        para.style.borderRadius = "10px";
+
+        swap(imageDiv, para);
+        getCoordinates();
+
+        let leftKey = document.querySelector("#leftKey");
+        let rightKey = document.querySelector("#rightKey");
+
+        leftKey.style.visibility = "visible";
+        rightKey.style.visibility = "visible";
+
+        if (ind == 0) leftKey.style.visibility = "hidden";
+        if (ind == headings.length - 1) rightKey.style.visibility = "hidden";
+
+        heading.textContent = headings[ind];
+        heading.style.padding = "0.5rem";
+        image.src = images[ind];
+        image.style.width = "450px";
+        image.style.height = "200px";
+        para.textContent = paras[ind];
+      };
+
+      const swap = (nodeA, nodeB) => {
+        const parentA = nodeA.parentNode;
+        const siblingA =
+          nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
+
+        nodeB.parentNode.insertBefore(nodeA, nodeB);
+        parentA.insertBefore(nodeB, siblingA);
+      };
+
+      document.querySelector("#tutorialImage").addEventListener("click", () => {
+        if (document.querySelector("#tutorial").style.display == "none") {
+          document.querySelector("#landing-section").style.display = "none";
+          document.querySelector("#tutorial").style.display = "flex";
+
+          populateTutorial();
+        } else {
+          document.querySelector("#landing-section").style.display = "flex";
+          document.querySelector("#tutorial").style.display = "none";
+        }
+      });
+
+      function getCoordinates() {
+        para.style.startX = imageDiv.getBoundingClientRect().x;
+        imageDiv.style.startX = imageDiv.getBoundingClientRect().x;
+      }
+    </script>
+
+    <!-- connect wallet script -->
+    <script>
+      let walletError = document.querySelector("#walletError");
+    </script>
+
+    <!-- checking for the errorneous case -->
+    <script>
+      // setInterval(() => {
+      //   if (window.innerWidth < 1100 || window.innerHeight < 500)
+      //     window.location = "./error.html";
+      // }, "1000");
+    </script>
+  </body>
+</html>

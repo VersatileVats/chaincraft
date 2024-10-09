@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainCraft</title>
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&amp;display=swap"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="./gameStyle.css" />
+
+    <!-- style for the #landing-section -->
+    <style>
+      * {
+        font-family: "Josefin Sans", sans-serif;
+      }
+
+      #landing-section {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      #landing-section img {
+        filter: grayscale(100%);
+      }
+
+      #full-form {
+        font-size: 2rem;
+        font-weight: bold;
+        border-radius: 1rem;
+        border: 2px dashed;
+        padding: 0.5rem;
+      }
+
+      #reasoning {
+        font-size: 1.2rem;
+        text-align: center;
+      }
+
+      #full-form,
+      #reasoning {
+        opacity: 0; /* Initially hidden */
+        transition: opacity 0.5s ease-in-out; /* Smooth fade-in and fade-out */
+      }
+
+      /*for sound notification*/
+      .notification {
+        position: fixed;
+        bottom: -100px; /* Hidden below the screen initially */
+        right: 20px;
+        background-color: #4caf50;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        opacity: 0;
+        transition: bottom 0.5s ease, opacity 0.5s ease;
+      }
+
+      .notification.show {
+        bottom: 20px; /* Brings the div into view */
+        opacity: 1;
+      }
+
+      .notification.hide {
+        bottom: -100px; /* Sends the div back after 4 seconds */
+        opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body style="font-family: 'Josefin Sans', sans-serif">
+    <div id="notification" style="z-index: 500" class="notification">
+      TRX have been depoisted in your wallet! Refresh to see the txn
+    </div>
+
+    <!-- tutorial image -->
+    <img
+      id="tutorialImage"
+      style="
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255);
+        border-radius: 0px;
+        z-index: 500;
+        width: 64px;
+      "
+      src="https://img.icons8.com/external-inipagistudio-mixed-inipagistudio/64/null/external-tutorial-online-crash-course-inipagistudio-mixed-inipagistudio.png" />
+
+    <!-- loader image -->
+    <img
+      id="loader"
+      style="
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 0;
+        padding: 0px;
+        width: 200px;
+        z-index: 500;
+      "
+      src="./img/loader.svg"
+      height="100px" />
+
+    <!-- tutorial section -->
+    <div
+      id="tutorial"
+      style="
+        z-index: 100;
+        height: 100vh;
+        display: none;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+      ">
+      <h2
+        id="heading"
+        style="
+          font-size: 2rem;
+          border: 3px solid;
+          border-radius: 5px;
+          margin-bottom: 5rem;
+        ">
+        Heading for the slide
+      </h2>
+      <div
+        style="
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+        ">
+        <div>
+          <img
+            id="leftKey"
+            onclick="leftOperation(currentTutorial)"
+            style="
+              visibility: hidden;
+              cursor: pointer;
+              background: rgb(255, 255, 255);
+              border-radius: 50%;
+            "
+            src="https://img.icons8.com/ios-glyphs/40/null/double-left--v1.png" />
+        </div>
+        <div id="imageDiv">
+          <img
+            id="image"
+            style="border-radius: 10px"
+            src="./img/bgd.jpg"
+            width="450"
+            alt="" />
+        </div>
+        <p
+          id="para"
+          style="
+            text-align: justify;
+            font-size: 1.3rem;
+            width: 50%;
+            border-radius: 10px;
+          ">
+          I am here to tell you about the various things that can be useful and
+          I will try my best to demonstrate the same
+        </p>
+        <div>
+          <img
+            id="rightKey"
+            onclick="rightOperation(currentTutorial)"
+            style="
+              visibility: hidden;
+              cursor: pointer;
+              background: rgb(255, 255, 255);
+              border-radius: 50%;
+            "
+            src="https://img.icons8.com/ios-glyphs/40/null/double-right--v1.png" />
+        </div>
+      </div>
+    </div>
+
+    <!-- landing section -->
+    <div id="landing-section">
+      <div id="full-form">
+        <p>Tells the full-form of this alphabet</p>
+      </div>
+      <div id="letters" style="text-align: center">
+        <img id="letter_logo" src="img/logo.png" alt="" />
+        <img id="letter_s" src="img/p.png" alt="" />
+        <img id="letter_m" src="img/l.png" alt="" />
+        <img id="letter_a" src="img/a.png" alt="" />
+        <img id="letter_r" src="img/y.png" alt="" />
+        <!-- Connect wallet division -->
+        <div style="margin-top: 3rem">
+          <button
+            id="gameBtn"
+            class="btn-light"
+            style="
+              display: flex;
+              visibility: hidden;
+              margin: auto;
+              font-size: 20px;
+              border-radius: 8px;
+            ">
+            Connect Wallet
+          </button>
+          <p style="text-align: center; margin-top: 1rem">
+            <span id="tronWalletDetails"></span>
+          </p>
+
+          <!-- Error division that will pop up whenever thers is a connectivity issue with the wallet -->
+          <p
+            id="walletError"
+            style="
+              color: red;
+              margin-top: 1rem;
+              visibility: hidden;
+              text-align: center;
+              background: rgba(255, 0, 0, 0.4);
+              backdrop-filter: blur(5px);
+              padding: 3px;
+              color: white;
+            ">
+            Error will pop up here
+          </p>
+        </div>
+      </div>
+
+      <div id="reasoning">
+        <p>
+          This is the text that will tell what is the reasoning for telling this
+        </p>
+      </div>
+    </div>
+
+    <!-- video game (#thetaGame)-->
+    <div
+      id="thetaGame"
+      style="
+        font-family: 'Josefin Sans', sans-serif;
+        display: none;
+        font-size: 1.1rem;
+        height: 100vh;
+        background: linear-gradient(to bottom, #9999ff 0%, #ff99cc 100%);
+      ">
+      <div
+        id="videoPlayground"
+        style="width: 90vw; height: 90vh; margin: auto; overflow: hidden">
+        <h1 style="text-align: center"><u>Video Playground</u></h1>
+
+        <div
+          id="videoDivInfo"
+          style="
+            width: 90%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          ">
+          <h3>Level <span id="videoLevels">1</span>/9</h3>
+          <div id="videoTypes" style="display: flex">
+            <div
+              id="environment"
+              style="
+                display: none;
+                padding: 5px;
+                background: green;
+                color: white;
+                border-radius: 3px;
+                margin: 0 3px;
+              ">
+              Environment
+            </div>
+            <div
+              id="history"
+              style="
+                display: none;
+                padding: 5px;
+                background: green;
+                color: white;
+                border-radius: 3px;
+                margin: 0 3px;
+              ">
+              History
+            </div>
+            <div
+              id="technology"
+              style="
+                display: none;
+                padding: 5px;
+                background: green;
+                color: white;
+                border-radius: 3px;
+                margin: 0 3px;
+              ">
+              Technology
+            </div>
+          </div>
+        </div>
+
+        <!-- division where the videos & videoQuestions will be rendered -->
+        <h3 style="width: 90%; margin: auto">
+          Score: <span id="score">0</span>
+        </h3>
+
+        <!-- Q&A division -->
+        <div
+          style="
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+          ">
+          <!-- videoQuestions & answers div -->
+          <div
+            id="videoQuestions"
+            style="
+              height: 90%;
+              width: 50%;
+              background: white;
+              border: 2px solid black;
+              border-radius: 20px 0px 0px 20px;
+              display: none;
+              justify-content: center;
+              align-items: center;
+            ">
+            <!-- video timer -->
+            <div id="videoTimer" style="font-size: 5rem"></div>
+
+            <div id="qna" style="display: none"></div>
+          </div>
+
+          <!-- video div -->
+          <div
+            id="video"
+            style="
+              height: 90%;
+              width: 50%;
+              border: 2px solid black;
+              border-radius: 0px 20px 20px 0px;
+              display: none;
+              justify-content: center;
+              align-items: center;
+            ">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              ">
+              <div id="videoPlayer" style="text-align: center">
+                <!-- will be dynamically added -->
+              </div>
+              <div id="qnaTimer" style="font-size: 5rem; display: none">5</div>
+            </div>
+          </div>
+
+          <!-- start div that appears at the start and after giving answers / running out of time -->
+          <div
+            id="startDiv"
+            style="
+              height: 80%;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-evenly;
+              align-items: center;
+            ">
+            <div>
+              <!-- <img id="correct" style="display: none" width="80" height="80" src="" alt="checked" /> -->
+              <img
+                id="correct"
+                style="display: none"
+                width="100"
+                height="100"
+                src="https://img.icons8.com/dotty/100/FFFFFF/check-all.png"
+                alt="check-all" />
+              <!-- <img id="wrong" style="display: none" width="80" height="80" src="https://img.icons8.com/dotty/80/FA5252/circled-x.png" alt="circled-x" /> -->
+              <img
+                id="wrong"
+                style="display: none"
+                width="100"
+                height="100"
+                src="https://img.icons8.com/dotty/100/FFFFFF/multiply-2.png"
+                alt="multiply-2" />
+            </div>
+            <div
+              id="completedAllLevels"
+              style="
+                display: none;
+                width: 90%;
+                margin: auto;
+                text-align: center;
+                color: red;
+                font-weight: bold;
+                font-size: 2rem;
+              ">
+              <p>
+                Congrats 🎉 you have completed all of the levels. Now you can go
+                back to the main village and play games there
+              </p>
+            </div>
+            <div id="instructions" style="text-align: justify">
+              <h2>Instructions to be followed for the game</h2>
+              <p>
+                🔴 This is a trivia game that will test your presence of mind by
+                showing you vidoes from various domains
+              </p>
+              <p>
+                🟡 For each video, you will get a stipulated time after which
+                the video will be closed automatically
+              </p>
+              <p>
+                🟢 You can get a video from one of these categories:
+                Environment, Technology & History
+              </p>
+              <p>
+                🟠 4 questions for the video will be shown which have to be
+                completed in 30 seconds
+              </p>
+            </div>
+            <div id="videoProceed">
+              <button
+                class="btn-light"
+                style="border-radius: 08px; font-size: 20px">
+                Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- game screen (#game) -->
+    <div
+      id="game"
+      style="
+        display: none;
+        font-family: 'Josefin Sans', sans-serif;
+        overflow: hidden;
+        position: relative;
+      ">
+      <h2 id="void" style="text-align: center">
+        <p
+          id="username"
+          style="
+            background: rgba(255, 255, 255, 1);
+            padding: 2px;
+            font-size: 1rem;
+            border-radius: 5px;
+            text-align: center;
+          ">
+          Hi Username
+        </p>
+      </h2>
+
+      <!-- left side division for the utilities (streak, balance, username & blockchain explorer) -->
+      <div
+        id="leftSideDiv"
+        style="
+          position: absolute;
+          left: 20px;
+          top: 10vh;
+          height: 70vh;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-content: space-around;
+        ">
+        <h2
+          id="levelJira"
+          style="
+            display: none;
+            float: left;
+            padding: 3px;
+            border: 5px solid black;
+            border-radius: 5px;
+            text-shadow: 1px 1px black;
+          ">
+          Level:<br /><b>01/06</b>
+        </h2>
+        <div id="streak" style="cursor: pointer; z-index: 5">
+          <img
+            src="https://img.icons8.com/color/64/null/distributed-counter.png" />
+        </div>
+        <div style="z-index: 5">
+          <p
+            id="balance"
+            style="
+              text-align: center;
+              background: rgba(235, 14, 7, 0.6);
+              color: white;
+              border-radius: 5px;
+              padding: 3px;
+            ">
+            Fetching
+          </p>
+        </div>
+        <div
+          id="openModal"
+          style="
+            cursor: pointer;
+            z-index: 5;
+            border-radius: 50%;
+            padding: 12px;
+            background-color: rgba(76, 215, 26, 0.7);
+          ">
+          <img
+            src="https://img.icons8.com/cotton/64/null/blockchain-checked.png" />
+        </div>
+      </div>
+
+      <!-- right side division for the utilities (weekly rewards, ndt section & music section) -->
+      <div
+        id="rightSideDiv"
+        style="
+          position: absolute;
+          right: 30px;
+          top: 10vh;
+          display: flex;
+          flex-direction: column;
+          height: 70vh;
+          justify-content: space-around;
+          align-items: center;
+        ">
+        <h2
+          id="timeJira"
+          style="
+            display: none;
+            float: right;
+            color: red;
+            border: 5px solid red;
+            padding: 10px;
+            border-radius: 50%;
+          ">
+          10
+        </h2>
+        <div id="weeklyRewards" style="cursor: pointer; z-index: 5">
+          <img
+            src="data:image/png;base64,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" />
+        </div>
+        <div
+          style="
+            border-radius: 10px;
+            padding: 0px 5px;
+            font-weight: bold;
+            background: rgba(26, 67, 215, 0.7);
+            color: white;
+          ">
+          <h3 style="margin: 0">Score: <span id="overAllScore"></span></h3>
+        </div>
+        <a
+          style="display: none; z-index: 5"
+          id="nft"
+          href="./nft.html"
+          target="_blank"
+          ><img src="https://img.icons8.com/fluency/64/null/nft.png"
+        /></a>
+        <div
+          class="musicOptions"
+          style="
+            display: block;
+            width: 120px;
+            justify-content: space-evenly;
+            text-align: left;
+            background: rgba(76, 215, 26, 0.7);
+            border-radius: 10px;
+            z-index: 10;
+            padding: 6px;
+            color: white;
+          ">
+          <p id="defaultSong">Default Song</p>
+          <p id="drive">Drive</p>
+          <p id="wallpaper">Wallpaper</p>
+          <p id="fluffingDuck">Fluffing Duck</p>
+          <p id="powerfulTrap">Powerful Trap</p>
+          <p id="darkPassenger">Dark Passenger</p>
+        </div>
+      </div>
+
+      <!-- Modal section that handles many things -->
+      <section class="modal hidden">
+        <h2
+          style="
+            text-align: center;
+            border: 3px solid black;
+            box-shadow: 3px 2px 2px;
+          ">
+          Transaction Logs
+        </h2>
+        <section
+          id="paymentDetails"
+          style="display: none; text-align: center; padding: 5px">
+          <p>
+            <span style="font-weight: bold">Amount: </span
+            ><span id="paymentAmount"></span>
+          </p>
+          <p>
+            <span style="font-weight: bold">Purpose: </span
+            ><span id="paymentMemo"></span>
+          </p>
+        </section>
+        <section id="weeklySection" style="display: none">
+          <p
+            style="
+              width: 100%;
+              margin-bottom: 10px;
+              text-align: center;
+              color: green;
+            ">
+            <span id="weekDate" style="text-decoration: underline"></span>
+          </p>
+          <p id="rewardsInfo" style="text-align: center">
+            Here you can see the players with highest points scored in this
+            week. A table having the deatils of top 2 highest scorer are shown
+            below. Look out for a special message if you are the top scorer
+          </p>
+          <p
+            id="weeklyError"
+            style="
+              display: none;
+              padding: 5px;
+              text-align: center;
+              background: rgba(235, 14, 7, 0.6);
+              border: 7px;
+            ">
+            Oops, it seems that all of the weekly rewards' NFTs are exhausted.
+            Don't worry, new ones are coming soon 🤟
+          </p>
+          <section
+            style="
+              margin-top: 10px;
+              margin-bottom: 10px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            ">
+            <p
+              style="
+                box-shadow: 5px 5px rgba(209, 192, 255, 1);
+                width: 100%;
+                text-align: center;
+                margin: auto;
+                padding: 5px;
+                border-radius: 15px;
+                border: 2px solid green;
+              ">
+              This week's rewards: <br /><br />
+              <b>200 TRX</b>
+            </p>
+            <img
+              style="
+                box-shadow: 5px 5px rgba(209, 192, 255, 1);
+                width: 45%;
+                border-radius: 15px;
+              " />
+            <table id="weeklyTable" style="width: 50%">
+              <!--<tr>-->
+              <!--<th>Rank</th> -->
+              <!--    <th>Username</th>-->
+              <!--    <th>Points</th>-->
+              <!--</tr>-->
+            </table>
+            <article
+              id="weeklyInfoError"
+              style="
+                width: 50%;
+                display: none;
+                text-align: justify;
+                margin: 15px;
+              ">
+              None of the registered users have started playing. It's time to
+              get your first point. Start playing 👍
+            </article>
+            <article
+              id="weeklyInfo"
+              style="
+                width: 50%;
+                display: none;
+                text-align: justify;
+                margin: 15px;
+              ">
+              Hurray 🥳, you are the top scorer as of now. Keep up the momentum
+            </article>
+          </section>
+          <article
+            id="description"
+            style="text-align: justify; margin: 15px"></article>
+        </section>
+
+        <!-- show streak section -->
+        <section id="showStreak" style="display: none">
+          <p>
+            Your streak as of today is of <span>5</span> days. Below are the
+            benefits of a better streak:
+          </p>
+          <table style="margin: 10px">
+            <tr>
+              <th>Streak</th>
+              <th>Benefits</th>
+            </tr>
+            <tr>
+              <td>1 day</td>
+              <td>0.05 TRX on login</td>
+            </tr>
+            <tr>
+              <td>2 days</td>
+              <td>0.1 TRX on login</td>
+            </tr>
+            <tr>
+              <td>3+ days</td>
+              <td>
+                0.2 TRX on login & 0.05 TRX for clearing a level in either of
+                the games
+              </td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- confirmation section -->
+        <section id="confirmation" style="display: none">
+          <p style="text-align: center; font-weight: bold">
+            Do you want to continue the purchase?
+          </p>
+          <article
+            style="
+              display: flex;
+              justify-content: space-around;
+              align-items: center;
+              color: black;
+            ">
+            <span
+              style="
+                font-size: 1.1rem;
+                padding: 10px;
+                background: rgba(76, 215, 26, 0.7);
+                border-radius: 30%;
+                cursor: pointer;
+              "
+              id="yes"
+              >Yes</span
+            >
+            <span
+              style="
+                font-size: 1.1rem;
+                padding: 10px;
+                background: rgba(235, 14, 7, 0.6);
+                border-radius: 30%;
+                cursor: pointer;
+              "
+              id="no"
+              >No</span
+            >
+          </article>
+        </section>
+
+        <!--payment flow section -->
+        <section
+          id="paymentFlow"
+          style="
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+          ">
+          <img
+            id="step1"
+            style="width: 20%; filter: grayscale(100%)"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAADx0lEQVR4nO2Yy08TURSHT2inD0gfMy0QKDUQ5BGhPEopFWJ4BVEBTfwDMLgzcak7ExcuBAPGlcQoxo0L1IBRUYkCCzQREwENYWN3yMbExLB1ccwdOzgt7XQK86K9N/mlzczN3Hu+Oa+5AHTQofbwA8AzANgBANRJZO0ZAKjWw/hfOhqeKLKXMi0BPCULFwZOYOfYPPbfW9NFnaNv0VvfIUCY1hLADlmUbEAv4/9DeCMA+K0lACTS23hBolCgAHT1AHdlo+oJjz3abFwPAI2yvuEBdGyuqyIKALLAA47dv4uFZwfR5vdjns2Gpnw72ivKsej8Oax7MJm9HhCce46Oxoa08e0Kh7D51ayiAAYA4IdOLWpScV2d2DT7BNvXP/NqmpnGI5cvIePh+PtmpxMDjx8pBmBLb4MTxbAsOluCaMrPR4bj0NEQwMrr17D1wyJ6+noxz2rFmjvjigFAouhQtyEkBcYRqMfQ0jsMvpxRNATQiACqJ8aw7dMyRlY+Ys3tW3xStPnLsOX1C8WTIIoBBDlXWhcNcS7ZBr3vieCpkkJ0Wxj0WC38893Mv/8DpUW40BNJCsB38QIyXg8fAr6RYQwvL2Dr8qIqVQDFAOTGqVzjieFSzyEgxBB2E2FPV9z/46srqjVCmAzAz6lAUmUCgLx5fkONTmyrKkDxGYH4W/1MadGe9Ts2Vvlyx5e8jVVVO0GU8oBEwzMB4GTM/NxvE7XosOdh4hmB8K3OWpi9ADRshVFtAF/Ha9FpN6UEwCUBcBCJjT85+UX/EOhrcOyGAHF7AoEY761r568N+vaGwH7FVgXjAARGbgj3NjVPgku9EXTFvCDTJKjESRB5+wXF5cIzh2UBCMkog62cW3YZJBBIkiNxTsofeT759VotOOQrxsUUZVAJAKK3/x0AzLIARA3SCEmd9kidLIlPhApKKtK+/UMFQPAMuUlQdM0Ehw3An7muOCUDIDUnk3MApABAugqkupfuulhS3xjib4usBQAyy6ruAKIqx/Z8d1uc5LwABZJgdgBgY10eKXXp5igaAiDTbZUMASUaIUMBCEkkQXFnqTuAqEH6ACU6wawDAColwa1M3F4raVkGTxsRgpYA1BxJN3RQ4ygAOOQeAAdMcHLmGBIAK6ODU2qOIQH0aywKAAzmAW4ZHZxScwzpAZDrSRBoHwC0EQLaCQJthSFXkyBLO8E12gn252IrDBkoVdMkt5lKIQpAr4G5/jW4TTYQvvpQc+PDV6YE48kedBuj+4xZJXVTTwCWGATeEzTWdmxtsgc66ID48RcuH2OgXjezPgAAAABJRU5ErkJggg==" />
+          <img
+            id="step2"
+            style="width: 20%; filter: grayscale(100%)"
+            src="https://img.icons8.com/external-flaticons-flat-flat-icons/100/null/external-digital-signature-automation-technology-flaticons-flat-flat-icons.png" />
+          <img
+            id="step4"
+            style="width: 20%; filter: grayscale(100%)"
+            src="https://img.icons8.com/nolan/100/change.png" />
+        </section>
+
+        <!-- Timer that will show how long does the transaction takes -->
+        <section
+          id="timer"
+          style="
+            text-align: center;
+            background: rgba(26, 67, 215, 0.7);
+            border-radius: 5px;
+            padding: 5px;
+            color: white;
+            display: none;
+          ">
+          0 second elapsed
+        </section>
+
+        <!-- Section in which table and stuff will be appended -->
+        <div
+          style="display: block; max-height: 140px; overflow-y: scroll"></div>
+        <button class="btn-close">Close</button>
+      </section>
+
+      <div class="overlay hidden"></div>
+
+      <div
+        id="gameCanvas"
+        style="
+          width: 100%;
+          text-align: center;
+          position: relative;
+          display: flex;
+        ">
+        <canvas style="border-radius: 5px; margin: auto"></canvas>
+        <div
+          id="homeDiv"
+          style="
+            padding: 5px;
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            border-radius: 5px;
+            color: whitesmoke;
+            background: rgba(76, 215, 26, 0.9);
+            z-index: 500;
+            text-align: left;
+          "></div>
+        <div
+          id="overlappingDiv"
+          style="
+            background-color: black;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+          "></div>
+      </div>
+
+      <!-- flip the bucket game div -->
+      <div id="atlassianBitbucketGame" style="display: none">
+        <div
+          id="gameContainer"
+          style="border-radius: 20px; background-color: white">
+          <div
+            id="gameStats"
+            style="
+              position: relative;
+              padding: 0px 10px;
+              margin-bottom: 5px;
+              display: flex;
+              flex-wrap: no-wrap;
+              justify-content: space-between;
+              align-items: center;
+            ">
+            <img
+              id="backToHome"
+              src="./img/backHome.png"
+              width="45"
+              height="45"
+              style="
+                border-radius: 50%;
+                cursor: pointer;
+                position: absolute;
+                left: -50px;
+              " />
+            <div>
+              <h3 id="currentPairMade"></h3>
+              <h3 id="currentDifficultyUI"></h3>
+            </div>
+            <h1 id="levelInfo"></h1>
+            <div id="lives"></div>
+            <img
+              id="nextLevel"
+              src="./img/next.png"
+              width="45"
+              height="45"
+              style="
+                cursor: pointer;
+                position: absolute;
+                right: -50px;
+                border-radius: 50%;
+                border: 2px solid black;
+              " />
+            <img
+              id="helpBitbucket"
+              style="
+                border-radius: 50%;
+                display: block;
+                cursor: pointer;
+                pointer-events: none;
+              "
+              src="./img/help.png"
+              width="45"
+              height="45"
+              alt="" />
+          </div>
+        </div>
+
+        <div
+          id="levelsCompletedDiv"
+          style="
+            cursor: pointer;
+            color: white;
+            display: none;
+            font-size: 1.3rem;
+            text-align: center;
+            margin: auto;
+            width: 50vw;
+            margin-top: 30vh;
+            background: green;
+            border-radius: 10px;
+          "></div>
+
+        <div id="bitbucketGameDiv">
+          <!-- the inner content will be dynamically added to the UI -->
+        </div>
+      </div>
+
+      <!-- maze runner game -->
+      <div id="atlassianJiraGame">
+        <div
+          id="clearedJiraLevels"
+          style="
+            display: none;
+            width: 50vw;
+            margin: auto;
+            background: green;
+            padding: 10px;
+            margin-top: 25vh;
+            text-align: center;
+            border-radius: 7px;
+            color: white;
+          ">
+          <h3>
+            Hurray, you have completed the game. Wait for the stats to be
+            fetched tomorrow and then you can again start playing
+          </h3>
+        </div>
+        <div id="jiraStats" style="display: none">
+          <!--<h2 id="levelJira"-->
+          <!--    style="float: left;padding: 5px;  border: 5px solid black; margin-left: 55px; border-radius: 5px; text-shadow: 1px 1px black;">-->
+          <!--    Level:<br><b>01/06</b></h2>-->
+          <!--<h2 id="timeJira"-->
+          <!--    style="float: right; color: red; border: 5px solid red; margin-right: 60px; padding: 10px; border-radius: 50%">-->
+          <!--    10-->
+          <!--</h2>-->
+        </div>
+        <canvas id="jiraGame" style="border-radius: 5px; margin: auto"></canvas>
+      </div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+      integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"
+      integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"></script>
+
+    <script src="./audio.js"></script>
+
+    <script>
+      let innerHeight = 550;
+      let innerWidth = 900;
+
+      if (0.2 * window.innerHeight + 500 < 0.95 * window.innerHeight) {
+        document.querySelector("#void").style.height = "5vh";
+      }
+    </script>
+
+    <!-- variables script -->
+    <script>
+      // boolean for player movement
+      let movePlayer = false;
+      let totalVideoLevels = 0;
+
+      let anotherChain = false;
+      let chainExplorer = "";
+
+      let streak;
+      let visited;
+      let score = 0;
+      let signupResult;
+
+      let walletName;
+      // let eternlWallet;
+      let changeAddress;
+
+      let transactions = "";
+      let purchasedSongs = "";
+      let mainSong = defaultSong;
+      let weeklyRewardsImage = "";
+
+      let modal = document.querySelector(".modal");
+      let overlay = document.querySelector(".overlay");
+      let balanceDiv = document.querySelector("#balance");
+      let paymentMemo = document.querySelector("#paymentMemo");
+      let closeModalBtn = document.querySelector(".btn-close");
+      let walletError = document.querySelector("#walletError");
+      let confirmation = document.querySelector("#confirmation");
+      let paymentAmount = document.querySelector("#paymentAmount");
+      let paymentDetails = document.querySelector("#paymentDetails");
+
+      function positionModal() {
+        const height = document.querySelector(".modal").clientHeight;
+        const width = document.querySelector(".modal").clientWidth;
+      }
+
+      // toggleZIndex function
+      function toggleZIndex(el = "") {
+        const itr = [
+          document.querySelector("#weeklyRewards"),
+          document.querySelector("#streak"),
+          document.querySelector("#openModal"),
+        ];
+        for (let a = 0; a < itr.length; a++) {
+          el != "" ? (itr[a].style.zIndex = "0") : (itr[a].style.zIndex = "5");
+        }
+        if (el != "") document.querySelector(`#${el}`).style.zIndex = "5";
+      }
+
+      let toggleClasses = [modal, overlay];
+      let songsMap = [
+        defaultSong,
+        drive,
+        wallpaper,
+        fluffingDuck,
+        powerfulTrap,
+        darkPassenger,
+      ];
+
+      let step1 = document.querySelector("#step1");
+      let step2 = document.querySelector("#step2");
+      let step4 = document.querySelector("#step4");
+      let timer = document.querySelector("#timer");
+      let paymentFlow = document.querySelector("#paymentFlow");
+
+      document.querySelector("#streak").addEventListener("click", () => {
+        document.querySelector("#streak").style.pointerEvents = "none";
+        document.querySelector(".musicOptions").style.pointerEvents = "none";
+
+        toggleZIndex("streak");
+        toggleClasses.forEach((el) => el.classList.remove("hidden"));
+        document.querySelector(".modal h2").textContent = "Streak Section";
+        document.querySelector(".modal div").style.display = "none";
+        document.querySelector("#showStreak").style.display = "block";
+        document.querySelector("#showStreak span").textContent = streak;
+        positionModal();
+      });
+
+      document
+        .querySelector("#weeklyRewards")
+        .addEventListener("click", async () => {
+          document.querySelector("#weeklyRewards").style.pointerEvents = "none";
+          document.querySelector(".musicOptions").style.pointerEvents = "none";
+          await gettingWeeklyStats();
+          toggleZIndex("weeklyRewards");
+          toggleClasses.forEach((el) => el.classList.remove("hidden"));
+          document.querySelector(".modal div").style.display = "none";
+          document.querySelector("#weeklySection").style.display = "block";
+          document.querySelector(
+            "#weekDate"
+          ).innerHTML = `Weekly stats will be refreshed every Saturday at 5:30 PM GMT<br><br><span style="color: black;">You have earned <b><span id="tadaRewards">${signupResult["earnedTRX"]}</span> TRX</b> as of now</span><br><br>`;
+
+          positionModal();
+        });
+
+      function incScore(localScore) {
+        callBackend(
+          { wallet: changeAddress, score: localScore },
+          "updateScore"
+        );
+        score += localScore;
+      }
+    </script>
+
+    <!-- video game script -->
+    <script src="./video.js?v=1"></script>
+
+    <script src="./tron.js?v=3.5"></script>
+
+    <script>
+      async function gettingWeeklyStats() {
+        document.querySelector("#weeklyTable").innerHTML = "";
+        document.querySelector(".modal h2").innerHTML = "Weekly Rewards Info";
+
+        let mainTR = document.createElement("tr");
+        let firstTH = document.createElement("th");
+        firstTH.textContent = "Username";
+        mainTR.appendChild(firstTH);
+        let secondTH = document.createElement("th");
+        secondTH.textContent = "Points";
+        mainTR.appendChild(secondTH);
+        document.querySelector("#weeklyTable").appendChild(mainTR);
+
+        var requestOptions = {
+          method: "GET",
+          redirect: "follow",
+        };
+
+        let results = await fetch(
+          "https://hackathonmaverick.in/tronplay/server.php?action=weeklyRewards",
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => result)
+          .catch((error) => console.log("error", error));
+
+        document.querySelector("#weeklyTable").style.display = "block";
+        document.querySelector("#weeklyInfo").style.display = "none";
+        document.querySelector("#weeklyInfoError").style.display = "none";
+
+        document.createElement("tr").innerHTML = "";
+
+        // No one has yet scored a point
+        if (results.length == 0) {
+          document.querySelector("#weeklyTable").style.display = "none";
+          document.querySelector("#weeklyInfoError").style.display = "block";
+        }
+        // the current palyer is the highest scorer
+        else if (results[0]["walletAddress"] == changeAddress) {
+          document.querySelector("#weeklyTable").style.display = "none";
+          document.querySelector("#weeklyInfo").style.display = "block";
+        }
+        // Someone has scored and the current player is not the highest scorer
+        else {
+          for (let result in results) {
+            let tr = document.createElement("tr");
+            let td = document.createElement("td");
+            td.textContent = `${results[result]["walletAddress"].slice(
+              0,
+              20
+            )}...`;
+            tr.appendChild(td);
+            td = document.createElement("td");
+            td.textContent = results[result]["score"];
+            tr.appendChild(td);
+
+            document.querySelector("#weeklyTable").appendChild(tr);
+          }
+        }
+      }
+    </script>
+
+    <script src="./data/collisions.js"></script>
+    <script src="./classes.js"></script>
+    <script src="./bitGame.js?v=1"></script>
+
+    <script src="./script.js"></script>
+
+    <!-- music functionality script -->
+    <script>
+      function controlMainSong(song, control) {
+        mainSong.stop();
+        if (song["_src"].includes("defaultSong")) {
+          // control == "play" ? defaultSong.play() : defaultSong.stop()
+          if (control == "play") {
+            mainSong = defaultSong;
+            // boughtableSongs.forEach(el => el.stop())
+            defaultSong.play();
+          } else defaultSong.stop();
+        } else if (song["_src"].includes("darkPassenger")) {
+          if (control == "play") {
+            if (purchasedSongs.includes("2")) mainSong = darkPassenger;
+            // boughtableSongs.forEach(el => el.stop())
+            darkPassenger.play();
+          } else darkPassenger.stop();
+        } else if (song["_src"].includes("drive")) {
+          if (control == "play") {
+            if (purchasedSongs.includes("3")) mainSong = drive;
+            // boughtableSongs.forEach(el => el.stop())
+            drive.play();
+          } else drive.stop();
+        } else if (song["_src"].includes("fluffingDuck")) {
+          if (control == "play") {
+            if (purchasedSongs.includes("4")) mainSong = fluffingDuck;
+            // boughtableSongs.forEach(el => el.stop())
+            fluffingDuck.play();
+          } else fluffingDuck.stop();
+        }
+        // makePayment(`Getting a hint for level ${currentLevel} & pair no ${currentPairMadeCount + 1}`, 0.01, {
+        else if (song["_src"].includes("powerfulTrap")) {
+          if (control == "play") {
+            if (purchasedSongs.includes("5")) mainSong = powerfulTrap;
+            // boughtableSongs.forEach(el => el.stop())
+            powerfulTrap.play();
+          } else powerfulTrap.stop();
+        } else if (song["_src"].includes("wallpaper")) {
+          if (control == "play") {
+            if (purchasedSongs.includes("6")) mainSong = wallpaper;
+            // boughtableSongs.forEach(el => el.stop())
+            // else buySong("Buying the Powerful Trap Music", 2.5, { musicNo: 6 })
+            wallpaper.play();
+          } else wallpaper.stop();
+        }
+      }
+
+      const attachEventListeners = () => {
+        for (let a = 1; a <= 6; a++) {
+          document.querySelector(
+            `.musicOptions :nth-child(${a})`
+          ).style.cursor = "pointer";
+          document.querySelector(`.musicOptions :nth-child(${a})`).style.color =
+            "black";
+          if (purchasedSongs.includes(`${a}`)) {
+            document.querySelector(
+              `.musicOptions :nth-child(${a})`
+            ).style.borderRadius = "2px";
+            document.querySelector(
+              `.musicOptions :nth-child(${a})`
+            ).style.border = "2px solid black";
+            document.querySelector(
+              `.musicOptions :nth-child(${a})`
+            ).style.padding = "2px";
+          }
+
+          document
+            .querySelector(`.musicOptions :nth-child(${a})`)
+            .addEventListener("mouseenter", (el) => {
+              el.target.style.cursor = "pointer";
+              controlMainSong(mainSong, "stop");
+              let song = el.target.getAttribute("id");
+              if (song == "defaultSong") controlMainSong(defaultSong, "play");
+              else if (song == "darkPassenger")
+                controlMainSong(darkPassenger, "play");
+              else if (song == "drive") controlMainSong(drive, "play");
+              else if (song == "fluffingDuck")
+                controlMainSong(fluffingDuck, "play");
+              else if (song == "powerfulTrap")
+                controlMainSong(powerfulTrap, "play");
+              else if (song == "wallpaper") controlMainSong(wallpaper, "play");
+            });
+          document
+            .querySelector(`.musicOptions :nth-child(${a})`)
+            .addEventListener("mouseleave", (el) => {
+              controlMainSong(mainSong, "play");
+              let song = el.target.getAttribute("id");
+              if (song == "darkPassenger")
+                controlMainSong(darkPassenger, "stop");
+              else if (song == "drive") controlMainSong(drive, "stop");
+              else if (song == "fluffingDuck")
+                controlMainSong(fluffingDuck, "stop");
+              else if (song == "powerfulTrap")
+                controlMainSong(powerfulTrap, "stop");
+              else if (song == "wallpaper") controlMainSong(wallpaper, "stop");
+            });
+
+          // else buySong("Buying the Powerful Trap Music", 2.5, { musicNo: 6 })
+          document
+            .querySelector(`.musicOptions :nth-child(${a})`)
+            .addEventListener("click", (el) => {
+              songsMap.forEach((item, ind) => {
+                if (
+                  item["_src"].includes(el.target.getAttribute("id")) &&
+                  ind != 0
+                ) {
+                  // avoiding buying the already purchased song
+                  if (purchasedSongs.includes(`${ind + 1}`)) return;
+                  purchaseCall(
+                    `${5 * ind}`,
+                    `Buying the ${el.target.getAttribute("id")} music Track`,
+                    `${ind + 1}`
+                  );
+                  // askChoice(`${0.5 * ind}`, `Purchasing the music track: ${el.target.getAttribute("id")}`)
+                }
+              });
+            });
+        }
+      };
+    </script>
+
+    <!-- proceed button  -->
+    <script>
+      document
+        .querySelector("#gameBtn")
+        .addEventListener("click", async (e) => {
+          if (e.target.textContent.trim() == "Connect Wallet") {
+            connectTronLink();
+          } else {
+            if (
+              signupResult == undefined ||
+              signupResult.score == undefined ||
+              chainExplorer == ""
+            ) {
+              document.querySelector("#landing-section").style.display = "flex";
+              document.querySelector("#walletError").style.visibility =
+                "visible";
+              document.querySelector("#walletError").textContent =
+                "Unbale to connect with Tron Link! Refreshing in 2 seconds";
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+              return;
+            }
+
+            document.querySelector("#walletError").style.visibility = "hidden";
+
+            document.querySelector("#loader").style.display = "block";
+            document.querySelector("#landing-section").style.display = "none";
+            document.querySelector("#game").style.display = "block";
+            document.querySelector("#loader").style.display = "none";
+            document.querySelector("#tutorialImage").style.display = "none";
+
+            movePlayer = true;
+
+            controlMainSong(defaultSong, "play");
+            attachEventListeners();
+          }
+        });
+    </script>
+
+    <!-- modal script -->
+    <script>
+      const populateModal = (heading, paragraph, link = "") => {
+        document.querySelector(".modal div").innerHTML = "";
+        document.querySelector(".modal h2").textContent = "";
+        document.querySelector(".modal h2").textContent = `${heading}`;
+        // document.querySelector(".modal div").innerHTML = `<p style="text-align: center; padding: 4px; border-radius: 4px">${paragraph}</p>`
+
+        for (let i = 0; i < paragraph.length; i++) {
+          let p = document.createElement("p");
+          p.style.textAlign = "justify";
+          p.style.padding = "4px";
+          p.style.borderRadius = "4px";
+
+          p.innerHTML = paragraph[i];
+
+          if (heading == "Know why that was right?")
+            p.style.background = "rgba(0,255,0,0.5)";
+
+          document.querySelector(".modal div").appendChild(p);
+        }
+
+        if (heading == "GAME SUMMARY") {
+          document.querySelector(".btn-close").style.display = "none";
+        }
+
+        if (heading == "Know why that was right?") {
+          let div = document.createElement("div");
+          div.style.textAlign = "center";
+          div.style.margin = "7px";
+          div.innerHTML = "👉🏼" + link;
+          document.querySelector(".modal div").appendChild(div);
+          // positionModal()
+        }
+      };
+
+      document.querySelector("#openModal").addEventListener("click", () => {
+        document.querySelector("#openModal").style.pointerEvents = "none";
+        document.querySelector(".musicOptions").style.pointerEvents = "none";
+
+        toggleZIndex("openModal");
+        document.querySelector(".modal div").innerHTML = "";
+        document.querySelector(".modal h2").innerHTML = "Transaction Logs";
+
+        let target = document.querySelector(".modal div");
+
+        let totalTxns = 0;
+        for (let keys in transactions) {
+          totalTxns++;
+          let p = document.createElement("p");
+
+          let a = document.createElement("a");
+          a.target = "__blank";
+          a.style.textDecoration = "none";
+          a.href = `${transactions[keys]["explorer"]}/transaction/${transactions[keys]["txnHash"]}`;
+
+          const isReward =
+            transactions[keys].memo.includes("completion reward") ||
+            transactions[keys].memo.includes("streak reward");
+
+          p.style.color = isReward ? "black" : "white";
+
+          p.innerHTML = isReward
+            ? `Received ${transactions[keys].trx} TRX for ${transactions[keys].memo}`
+            : `Spent ${transactions[keys].trx} TRX for ${transactions[keys].memo}`;
+
+          p.style.background = isReward
+            ? "rgba(0, 255, 0, 0.5)" // Green background for rewards
+            : "rgba(255, 0, 0, 0.5)"; // Red background for spent TRX
+
+          p.style.padding = "4px";
+          p.style.textAlign = "center";
+          p.style.borderRadius = "4px";
+
+          a.appendChild(p);
+          target.appendChild(a);
+        }
+
+        console.log("TXN COUNT IS: " + totalTxns);
+
+        if (totalTxns == 0) {
+          document.querySelector(".modal h2").textContent = `Transaction Logs`;
+          let p = document.createElement("p");
+          p.textContent = "No transaction has yet been processed";
+          p.style.backgroundColor = "rgba(21,175,100,0.5)";
+          p.style.padding = "4px";
+          p.style.textAlign = "center";
+          p.style.borderRadius = "4px";
+
+          target.appendChild(p);
+        }
+
+        toggleClasses.forEach((el) => {
+          el.classList.remove("hidden");
+        });
+        positionModal();
+      });
+
+      function resetStyling() {
+        toggleZIndex();
+        timer.style.display = "none";
+        paymentFlow.style.display = "none";
+        confirmation.style.display = "none";
+        paymentDetails.style.display = "none";
+        closeModalBtn.style.display = "block";
+        document.querySelector("#showStreak").style.display = "none";
+        document.querySelector("#weeklySection").style.display = "none";
+
+        step1.style.filter = "grayscale(100%)";
+        step2.style.filter = "grayscale(100%)";
+        step4.style.filter = "grayscale(100%)";
+        document.querySelector(".modal div").style.display = "block";
+      }
+
+      const closeModal = function () {
+        resetStyling();
+        toggleClasses.forEach((el) => el.classList.toggle("hidden"));
+
+        document.querySelector("#streak").style.pointerEvents = "auto";
+        document.querySelector("#openModal").style.pointerEvents = "auto";
+        document.querySelector(".musicOptions").style.pointerEvents = "auto";
+        document.querySelector("#weeklyRewards").style.pointerEvents = "auto";
+      };
+
+      closeModalBtn.addEventListener("click", closeModal);
+    </script>
+
+    <!--for handling the landing section stuff-->
+    <script>
+      const reasons = [
+        "3-in-1 game that will make you fall in love with TRON",
+        "An easy-to-use game made by Blockchain",
+        "Increase awareness among masses about Blockchain with interesting games",
+        "These are some of the mind-sharpening games that increase knowledge about CS topics, Tron Blockchain wih ease",
+        "Some cool features that make you play game daily",
+      ];
+      const fullForms = [
+        "ChainCraft",
+        "Playful arena",
+        "Leveraging Blockchain",
+        "Advocate trending technology",
+        "Your go to place",
+      ];
+
+      const fullFormDiv = document.querySelector("#full-form");
+      const reasoningDiv = document.querySelector("#reasoning");
+
+      function startAnimation() {
+        document.querySelectorAll("#letters img").forEach((letter, ind) => {
+          setTimeout(() => {
+            // Hide the text first (fade-out)
+            fullFormDiv.style.opacity = 0;
+            reasoningDiv.style.opacity = 0;
+
+            setTimeout(() => {
+              // Update the content
+              reasoningDiv.textContent = reasons[ind];
+              fullFormDiv.textContent = fullForms[ind];
+
+              // Fade the text back in (fade-in)
+              fullFormDiv.style.opacity = 1;
+              reasoningDiv.style.opacity = 1;
+
+              letter.style.filter = "grayscale(0)";
+            }, 500); // Short delay to allow fade-out before updating text
+
+            // Reset after all letters are traversed
+            if (ind === document.querySelectorAll("#letters img").length - 1) {
+              setTimeout(() => {
+                document.querySelectorAll("#letters img").forEach((letter) => {
+                  letter.style.filter = "grayscale(100%)";
+                });
+                startAnimation(); // Restart animation
+              }, 4000); // 4-second break before restarting
+            }
+          }, ind * 3000); // Delay between each letter's appearance
+        });
+      }
+
+      // Start the animation cycle
+      startAnimation();
+
+      const gsapAnimations = [
+        // 0. Smile animation
+        {
+          duration: 2, // Duration for the full motion
+          x: (i) => i * 30 - 60, // Moves letters horizontally
+          y: (i) => Math.sin(i * 0.7) * 50 - 20, // Bends letters to form a smile (curve)
+          rotate: (i) => i * 10 - 20, // Slight rotation for a curved look
+          ease: "power1.inOut", // Smooth easing effect
+          repeat: -1, // Repeat infinitely
+          yoyo: true, // Reverse the animation to create a loop
+          stagger: 0.2, // Stagger the animation so each letter moves with a small delay
+        },
+        // 1. Vertical movement and rotation
+        {
+          duration: 1.5, // Duration of the animation for each letter
+          y: (i) => (i % 2 === 0 ? -20 : 20), // Alternating vertical movement (up for even letters, down for odd)
+          rotate: (i) => (i % 2 === 0 ? 10 : -10), // Alternating rotation (clockwise for even, counterclockwise for odd)
+          ease: "power2.inOut", // Smooth easing for the motion
+          stagger: 0.2, // Stagger between letters
+          repeat: -1, // Repeat infinitely
+          yoyo: true, // Reverse the animation to make it continuous
+        },
+        // 2. Zoom In and Rotate
+        {
+          duration: 1.5,
+          scale: 1.3, // Scale up the letters
+          rotate: 360, // Rotate a full circle
+          ease: "power1.inOut", // Smooth transition for scaling and rotation
+          stagger: 0.2, // Delay between each letter
+          repeat: -1,
+          yoyo: true, // Reverse back to original size and rotation
+        },
+        // 3. Wave and Float Effect
+        {
+          duration: 2,
+          y: (i) => Math.sin(i * 1.5) * 30, // Create wave effect with vertical motion
+          rotate: (i) => i * 15 - 30, // Rotate letters slightly
+          ease: "sine.inOut", // Smooth wave motion
+          stagger: 0.25, // Delay for wave effect
+          repeat: -1,
+          yoyo: true, // Reverse motion for continuous wave
+        },
+        // 4. Flip and Slide Up
+        {
+          duration: 1.2,
+          y: -50, // Slide letters upwards
+          rotateX: 180, // Flip letters vertically
+          ease: "power2.out", // Smooth easing for the flip
+          stagger: 0.3, // Delay between letters
+          repeat: -1,
+          yoyo: true, // Reverse the flip and slide for continuous effect
+        },
+        // 5. Horizontal Slide and Bounce Effect
+        {},
+      ];
+
+      const animationInd = Math.floor(Math.random() * gsapAnimations.length);
+
+      if (animationInd == 5) {
+        gsap.fromTo(
+          "#letters img",
+          {
+            x: (i) => (i % 2 === 0 ? -100 : 100), // Slide from left for even letters, right for odd
+          },
+          {
+            duration: 1.5,
+            x: 0, // Move to the center (normal position)
+            ease: "bounce.out", // Add bounce effect
+            stagger: 0.3, // Delay between each letter
+            repeat: -1,
+            yoyo: true,
+          }
+        );
+      } else {
+        gsap.to("#letters img", gsapAnimations[animationInd]);
+      }
+    </script>
+
+    <!-- populate Tutorial -->
+    <script>
+      let imageDiv = document.querySelector("#imageDiv");
+      let heading = document.querySelector("#heading");
+      let image = document.querySelector("#image");
+      let para = document.querySelector("#para");
+
+      let currentTutorial = 0;
+
+      const leftOperation = (ind) => {
+        if (ind > 0) populateTutorial(ind - 1);
+      };
+
+      const rightOperation = (ind) => {
+        if (ind < 4) populateTutorial(ind + 1);
+      };
+
+      const populateTutorial = (ind = 0) => {
+        const headings = [
+          "Why this game?",
+          "Bitbucket Game Basics",
+          "Maze Runner Basics",
+          "Tron Video Usage",
+          "Personal Room (The End)",
+        ];
+        const images = [
+          "./img/i1.jpg",
+          "./img/i2.jpg",
+          "./img/i3.jpg",
+          "./img/i4.jpg",
+          "./img/t5.jpg",
+        ];
+        const paras = [
+          "This is a bare-javascript game that has the capabilities to beat any proficient game out in the market. Games are undoubtedly the logical sharpeners for our brains and if a game like this meets the power of Tron then the functionalities and security standards are taken into cloud nine. With a combo of 3 functional games and lots of add-ons, the user won't be bored at any point of time and will cater knowledge throughout the process",
+          "This is a tile-matching game that has either 9 or 15 tiles according to the difficulty level. A correct answer will comprise three co-related tiles pertaining to either of the 4 topics that I have chosen: Data Structures & Algo (DSA), Operating System (OS), Tron & DBMS. Hints will also be there.",
+          "Time will be chasing the player. Make it to the exit and beat a level, it is all about adventure and cognitive skills. A total of 6 levels are there to test you against some of the hard mazes. Time will vary from one level to another. Once lost, you have to start over again from level 1. Help the player to reach the house which is at the end of the levels",
+          "There will be 9 videos related to varying domains (Technology, History & Environment) to make sure that at the expense of playing the game, the user learns a lot and also enjoys. The top scorer of each week will automatically get some test TRX.",
+          "Before ending the current session, it is beneficial to see the stats gathered throughout the gaming tenure, so visit this room at the end as there is no way out of this room. Visit it, see the stats and close the game. To get out of any game room, use BACKSPACE.",
+        ];
+
+        currentTutorial = ind;
+
+        image.style.borderRadius = "10px";
+
+        para.style.width = "50%";
+        para.style.fontSize = "1.3rem";
+        para.style.borderRadius = "10px";
+
+        swap(imageDiv, para);
+        getCoordinates();
+
+        let leftKey = document.querySelector("#leftKey");
+        let rightKey = document.querySelector("#rightKey");
+
+        leftKey.style.visibility = "visible";
+        rightKey.style.visibility = "visible";
+
+        if (ind == 0) leftKey.style.visibility = "hidden";
+        if (ind == headings.length - 1) rightKey.style.visibility = "hidden";
+
+        heading.textContent = headings[ind];
+        heading.style.padding = "0.5rem";
+        image.src = images[ind];
+        image.style.width = "450px";
+        image.style.height = "200px";
+        para.textContent = paras[ind];
+      };
+
+      const swap = (nodeA, nodeB) => {
+        const parentA = nodeA.parentNode;
+        const siblingA =
+          nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
+
+        nodeB.parentNode.insertBefore(nodeA, nodeB);
+        parentA.insertBefore(nodeB, siblingA);
+      };
+
+      document.querySelector("#tutorialImage").addEventListener("click", () => {
+        if (document.querySelector("#tutorial").style.display == "none") {
+          document.querySelector("#landing-section").style.display = "none";
+          document.querySelector("#tutorial").style.display = "flex";
+
+          populateTutorial();
+        } else {
+          document.querySelector("#landing-section").style.display = "flex";
+          document.querySelector("#tutorial").style.display = "none";
+        }
+      });
+
+      function getCoordinates() {
+        para.style.startX = imageDiv.getBoundingClientRect().x;
+        imageDiv.style.startX = imageDiv.getBoundingClientRect().x;
+      }
+    </script>
+
+    <!-- checking for the errorneous case -->
+    <script>
+      setInterval(() => {
+        if (window.innerWidth < 1100 || window.innerHeight < 500)
+          if (window.tronLink) {
+            window.location = "./error.html";
+          }
+      }, "1000");
+    </script>
+  </body>
+</html>
